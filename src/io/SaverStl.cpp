@@ -40,9 +40,9 @@
 #include "StrException.hpp"
 
 #include "wrl/Shape.hpp"
-// #include "wrl/Appearance.hpp"
-// #include "wrl/Material.hpp"
-// #include "core/Faces.hpp"
+#include "wrl/Appearance.hpp"
+#include "wrl/Material.hpp"
+#include "core/Faces.hpp"
 
 const char* SaverStl::_ext = "stl";
 SaverStl::FileType SaverStl::_fileType = SaverStl::FileType::ASCII;
@@ -58,21 +58,40 @@ bool SaverStl::_saveAscii
 (FILE* fp, const char* solidname, IndexedFaceSet& ifs) const {
 
   int nF = ifs.getNumberOfFaces();
-  vector<float>& coord       = ifs.getCoord();
+  vector<float>& coords       = ifs.getCoord();
   vector<int>&   coordIndex  = ifs.getCoordIndex();
-  vector<float>& normal      = ifs.getNormal();
+  vector<float>& normals      = ifs.getNormal();
   vector<int>&   normalIndex = ifs.getNormalIndex();
   // already checked that ifs.getNormalPerVertex()==false
   bool           npf_indexed = (static_cast<int>(normalIndex.size())==nF);
 
-  fprintf(fp,"solid %s\n",solidname);
-    
-  int iF,iV0,iV1,iV2,iN;
-  float x0,x1,x2,n0,n1,n2;
-  for(iF=0;iF<nF;iF++) { // for each face ...
+  if(fp!=(FILE*)0) {
 
-    // TODO
-    // use fprintf() to print formatted text
+    fprintf(fp,"solid %s\n",solidname);
+
+    // - construct an instance of the Faces class from the IndexedFaceSet
+    Faces faces = Faces(ifs.getNumberOfCoord(), ifs.getCoordIndex());
+
+    float face_normal[3];
+    float vertex_coords[3];
+    for(int iF = 0; iF < faces.getNumberOfFaces(); ++iF){
+        int iV = 0;
+        int vertex = -1;
+
+        // write normal
+        for(int i = 0; i < 3; ++i) face_normal[i] = normals[3*iF + i];
+        fprintf(fp,"facet normal %f %f %f\n", face_normal[0], face_normal[1], face_normal[2]);
+
+        // write face vertex
+        fprintf(fp, "  outer loop\n");
+        while((vertex = faces.getFaceVertex(iF, iV++)) > -1){
+          for(int i = 0; i < 3; ++i) vertex_coords[i] = coords[3*vertex + i];
+        fprintf(fp,"    vertex %f %f %f\n", vertex_coords[0], vertex_coords[1], vertex_coords[2]);
+      }
+      fprintf(fp, "  endloop\n");
+      fprintf(fp, "endfacet\n");
+    }
+    fprintf(fp, "endsolid %s", solidname);
 
   }
 
@@ -186,15 +205,6 @@ bool SaverStl::save(const char* filename, SceneGraph& wrl) const {
     // - if you find a face with more than thre vertices
     //   throw an exception
 
-    // Faces faces(nV,coordIndex);
-    // int nF = faces.getNumberOfFaces();
-    // if(nF<1)
-    //   throw new StrException("has no faces");
-    // for(int iF=0;iF<nF;iF++) {
-    //   if(faces.getFaceSize(iF)!=3)
-    //     throw new StrException("is not a triangle mesh");
-    // }
-
     int i0,i1,nFs;
     for(i0=i1=0;i0<static_cast<int>(coordIndex.size());i1++) {
       if(coordIndex[i1]>=0) continue;
@@ -213,27 +223,31 @@ bool SaverStl::save(const char* filename, SceneGraph& wrl) const {
 
     // default solid name
     char solidname[256] = "solidname";
+    const char* alt_solidname;
     string ifs_name = ifs->getName();
     if(ifs_name.empty()==false) {
       snprintf(solidname,256,"%s",ifs_name.c_str());
     } else {
       // otherwise use filename, but first remove directory and extension
-      // TODO
+        string sfilename = string(filename);
+        std::size_t init_pos = sfilename.find_last_of("/") + 1;
+        alt_solidname = sfilename.substr(init_pos, sfilename.find_last_of(".") - init_pos).c_str();
+        printf("solid %s\n",alt_solidname);
     }
 
-    if(_fileType==SaverStl::FileType::ASCII) { ///////////////////////
+    if(_fileType==SaverStl::FileType::ASCII) {
 
       // if (all the conditions are satisfied) try to open the file
       fp = fopen(filename,"w");
       if( fp==(FILE*)0)
         throw new StrException("unable to open ASCII STL outputfile");
 
-      if(_saveAscii(fp,solidname,*ifs)==false)
+      if(_saveAscii(fp,alt_solidname,*ifs)==false)
         throw new StrException("unable to save ASCII STL outputfile");
     
       fclose(fp);
 
-    } else /* if(_fileType==FileType::BINARY) */ { ///////////////////
+    } else {
 
       // if (all the conditions are satisfied) try to open the file
       fp = fopen(filename,"wb");
@@ -245,7 +259,7 @@ bool SaverStl::save(const char* filename, SceneGraph& wrl) const {
 
       fclose(fp);
 
-    } ////////////////////////////////////////////////////////////////
+    }
     
     success = true;
     

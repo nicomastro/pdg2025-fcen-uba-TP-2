@@ -83,40 +83,23 @@ IndexedFaceSet* LoaderStl::_initializeSceneGraph
 
 bool LoaderStl::_loadFacetAscii
 (TokenizerFile& tkn, Vec3f& n, Vec3f& v1, Vec3f& v2, Vec3f& v3) {
-
-  // - parse one facet :
-  //
-  // facet normal ni nj nk
-  //   outer loop
-  //     vertex v1x v1y v1z
-  //     vertex v2x v2y v2z
-  //     vertex v3x v3y v3z
-  //   endloop
-  // endfacet
-  //
-  // - return true if successful, false if not
-
-  // facet normal ni nj nk
-  if(tkn.expecting("facet")==false) return false;
-  if(tkn.expecting("normal")==false) return false;
-  if(tkn.getVec3f(n)==false) return false;
-  //   outer loop
-  if(tkn.expecting("outer")==false) return false;
-  if(tkn.expecting("loop")==false) return false;
-  //     vertex v1x v1y v1z
-  if(tkn.expecting("vertex")==false) return false;
-  if(tkn.getVec3f(v1)==false) return false;
-  //     vertex v2x v2y v2z
-  if(tkn.expecting("vertex")==false) return false;
-  if(tkn.getVec3f(v2)==false) return false;
-  //     vertex v3x v3y v3z
-  if(tkn.expecting("vertex")==false) return false;
-  if(tkn.getVec3f(v3)==false) return false;
-  //   endloop
-  if(tkn.expecting("endloop")==false) return false;
-  // endfacet
-  if(tkn.expecting("endfacet")==false) return false;
-  return true;
+    tkn.get();
+    if(tkn == "endsolid") return false;
+    if(!(tkn == "facet" && tkn.expecting("normal")))
+        throw new StrException("Expecting facet normal");
+    if(!tkn.getVec3f(n))
+        throw new StrException("Expecting Vec3f");
+    if(!(tkn.expecting("outer") && tkn.expecting("loop")))
+        throw new StrException("Expecting outer loop");
+    if(!(tkn.expecting("vertex") && tkn.getVec3f(v1)))
+        throw new StrException("Expecting vertex Vec3f");
+    if(!(tkn.expecting("vertex") && tkn.getVec3f(v2)))
+        throw new StrException("Expecting vertex Vec3f");
+    if(!(tkn.expecting("vertex") && tkn.getVec3f(v3)))
+        throw new StrException("Expecting vertex Vec3f");
+    if(!(tkn.expecting("endloop") && tkn.expecting("endfacet")))
+        throw new StrException("Expecting endfacet");
+    return true;
 }
 
 bool LoaderStl::_loadFacetBinary
@@ -228,7 +211,7 @@ bool LoaderStl::load(const char* filename, SceneGraph& wrl) {
 
       int   iV0,iV1,iV2;
       Vec3f n,v1,v2,v3;
-      while(_loadFacetAscii(tkn,n,v1,v2,v3)) {
+      while(_loadFacetAscii(tkn,n,v1,v2,v3)) {n
         normal.push_back(n[0]);
         normal.push_back(n[1]);
         normal.push_back(n[2]);

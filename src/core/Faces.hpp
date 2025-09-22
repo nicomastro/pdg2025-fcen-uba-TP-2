@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------
 //  Copyright (C) Gabriel Taubin
-//  Time-stamp: <2025-08-05 16:34:20 taubin>
+//  Time-stamp: <2025-08-04 22:10:14 gtaubin>
 //------------------------------------------------------------------------
 //
 // Faces.hpp
 //
-// Written by: <Your Name>
+// Written by: Nicolas Mastropasqua
 //
 // Software developed for the course
 // Digital Geometry Processing
@@ -38,59 +38,63 @@
 #define _FACES_HPP_
 
 #include <vector>
+typedef unsigned int uint;
 
 using namespace std;
 
 class Faces {
-  
+
 public:
-          Faces(const int nV, const vector<int>& coordIndex);
+    Faces(const int nV, const vector<int>& coordIndex);
 
-  // The constructor should compare the nV value passed as a parameter
-  // with the non-negative values in stored in the coordIndex index
-  // array, and update the value of nV stored internally if
-  // necessary. This value returns the updated value;
-  int     getNumberOfVertices()                    const;
+    // The constructor should compare the nV value passed as a parameter
+    // with the non-negative values in stored in the coordIndex index
+    // array, and update the value of nV stored internally if
+    // necessary. This value returns the updated value;
+    int     getNumberOfVertices()                    const;
 
-  // The faces are conted in the constructor by counting the number of
-  // -1's in the coordIndex array. If coordIndex is not empty, the
-  // last value of coordIndex should be -1.
-  int     getNumberOfFaces()                       const;
+    // The faces are conted in the constructor by counting the number of
+    // -1's in the coordIndex array. If coordIndex is not empty, the
+    // last value of coordIndex should be -1.
+    int     getNumberOfFaces()                       const;
 
-  // The number of corners is defined as the size of the coordIndex
-  // array.  Including the -1 face separators as corners simplify many
-  // of the algorithms.
-  int     getNumberOfCorners()                     const;
+    // The number of corners is defined as the size of the coordIndex
+    // array.  Including the -1 face separators as corners simplify many
+    // of the algorithms.
+    int     getNumberOfCorners()                     const;
 
-  // If iF is a valid face index, this method returns the number of
-  // corners of the face iF. Otherwise it returns 0.
-  int     getFaceSize(const int iF)                const;
 
-  // If iF is a valid face index, this method returns the index of the
-  // coordIndex entry corresponding to the first corner of the face
-  // iF. Otherwise it returns -1.
-  int     getFaceFirstCorner(const int iF)         const;
+    // If iF is a valid face index, this method returns the number of
+    // corners of the face iF. Otherwise it returns 0.
+    int     getFaceSize(const int iF)                const;
 
-  // If iF is a valid face index, and j is a valid corner index for
-  // face iF, this method returns the value stored in the
-  // corresponding coordIndex entry.
-  int     getFaceVertex(const int iF, const int j) const;
+    // If iF is a valid face index, this method returns the index of the
+    // coordIndex entry corresponding to the first corner of the face
+    // iF. Otherwise it returns -1.
+    int     getFaceFirstCorner(const int iF)         const;
 
-  // If iC is a valid corner index, and it does not correspond to a -1
-  // separator, this method returns the index of the face which
-  // contains the given corner. Otherwise it returns -1.
-  int     getCornerFace(const int iC)              const;
+    // If iF is a valid face index, and j is a valid corner index for
+    // face iF, this method returns the value stored in the
+    // corresponding coordIndex entry.
+    int     getFaceVertex(const int iF, const int j) const;
 
-  // If iC is a valid corner index, and it does not correspond to a -1
-  // separator, this method returns the next corner index within the
-  // cyclical order of the face which contains the given
-  // corner. Otherwise it returns -1.
-  int     getNextCorner(const int iC)              const;
+    // If iC is a valid corner index, and it does not correspond to a -1
+    // separator, this method returns the index of the face which
+    // contains the given corner. Otherwise it returns -1.
+    int     getCornerFace(const int iC)              const;
+
+    // If iC is a valid corner index, and it does not correspond to a -1
+    // separator, this method returns the next corner index within the
+    // cyclical order of the face which contains the given
+    // corner. Otherwise it returns -1.
+    int     getNextCorner(const int iC)              const;
 
 private:
 
-  // TODO
-
+    // TODO
+    uint nV;
+    vector<int> coordIndex;
+    vector<int> firstCornerFace;
 };
 
 #endif /* _FACES_HPP_ */

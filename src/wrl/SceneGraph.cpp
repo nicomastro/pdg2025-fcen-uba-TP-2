@@ -5,7 +5,7 @@
 //
 // SceneGraph.cpp
 //
-// Software developed for the course
+// Software deveped for the course
 // Digital Geometry Processing
 // Copyright (c) 2025, Gabriel Taubin
 // All rights reserved.
