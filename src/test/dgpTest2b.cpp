@@ -218,7 +218,26 @@ int main(int argc, char **argv) {
         printIndexedFaceSetInfo(cout, shapeName, iIfs,*ifs,"    ");
       }
 
-      // TODO ...
+      if(D._removeNormal){
+        if(D._debug) 
+          cout << "  Removing normal (and normalIndex)" << endl;
+        ifs->getNormal().clear();
+        ifs->getNormalIndex().clear();
+      }
+
+      if(D._removeColor){
+        if(D._debug) 
+          cout << "  Removing color (and colorIndex)" << endl;
+        ifs->getColor().clear();
+        ifs->getColorIndex().clear();
+      }
+
+      if(D._removeTexCoord){
+        if(D._debug) 
+          cout << "  Removing color (and colorIndex)" << endl;
+        ifs->getTexCoord().clear();
+        ifs->getTexCoordIndex().clear();
+      }
 
       if(D._debug) {
         cout << "  after processing" << endl;

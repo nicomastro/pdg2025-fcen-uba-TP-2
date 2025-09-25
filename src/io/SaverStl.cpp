@@ -5,7 +5,7 @@
 //
 // SaverStl.cpp
 //
-// Written by: <Your Name>
+// Written by: Nicolas Mastropasqua
 //
 // Software developed for the course
 // Digital Geometry Processing

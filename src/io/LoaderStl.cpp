@@ -5,7 +5,7 @@
 //
 // LoaderStl.cpp
 //
-// Written by: <Your Name>
+// Written by: Nicolas Mastropasqua
 //
 // Software developed for the course
 // Digital Geometry Processing
@@ -211,7 +211,7 @@ bool LoaderStl::load(const char* filename, SceneGraph& wrl) {
 
       int   iV0,iV1,iV2;
       Vec3f n,v1,v2,v3;
-      while(_loadFacetAscii(tkn,n,v1,v2,v3)) {n
+      while(_loadFacetAscii(tkn,n,v1,v2,v3)) {
         normal.push_back(n[0]);
         normal.push_back(n[1]);
         normal.push_back(n[2]);
