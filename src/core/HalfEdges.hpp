@@ -108,7 +108,12 @@ public:
   // corner corresponding to a half edge incident to the given edge
 
   int     getEdgeHalfEdge(const int iE, const int j) const;
-
+
+  bool    isValidCoord(const int iC) const;
+
+  bool    isValidEdge(const int iE) const;
+
+
 protected:
 
   // reference to the coordIndex passed as argument
