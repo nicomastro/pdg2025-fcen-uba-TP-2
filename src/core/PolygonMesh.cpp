@@ -80,7 +80,7 @@ PolygonMesh::PolygonMesh(const int nVertices, const vector<int>& coordIndex):
           //      the two incident half edges
           e1 = getEdgeHalfEdge(iE, 0);
           e2 = getEdgeHalfEdge(iE, 1);
-
+          cout << e1 <<  " " << e2 << endl;
           // for the moment let's assume that the mesh does not have
           // singular edges, and that pairs of corners corresponding to the
           // same vertex across inconsistently oriented faces will be joined
@@ -100,7 +100,6 @@ PolygonMesh::PolygonMesh(const int nVertices, const vector<int>& coordIndex):
   //    - for each corner iC which is a representative of its subset
   int pId;
   vector<bool> visited(partition.getNumberOfParts(), false);
-  cout << visited.size() << endl;
   for(int iC = 0; iC < nC; ++iC)
       if(_coordIndex[iC] >= 0 && (pId = partition.find(iC)) != -1)
           if(!visited[pId]){
@@ -173,7 +172,7 @@ bool PolygonMesh::isRegular() const {
     int nV = getNumberOfVertices();
     while(isRegularEdge(iE++) && iE < nE );
     if(iE < nE) return false;
-    while(!_isBoundaryVertex[iV++] && _nPartsVertex[iV] <=1 && iV < nV );
+    while(_nPartsVertex[iV++] <=1 && iV < nV );
     if(iV < nV) return false;
     return true;
 }

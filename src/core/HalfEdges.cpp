@@ -189,8 +189,8 @@ HalfEdges::HalfEdges(const int nVertices, const vector<int>&  coordIndex):
   //    location _firstCornerEdge[iE]
   for(iC=0;iC<nC;++iC){
         if((src = getSrc(iC)) == -1 || (dst = getDst(iC)) == -1) continue;
-        int start = _firstCornerEdge[getEdge(src, dst)] - 1;
-        while(_cornerEdge[start++] != -1);
+        int start = _firstCornerEdge[getEdge(src, dst)];
+        while(_cornerEdge[start] != -1)++start;
         _cornerEdge[start] = iC;
   }
 
@@ -247,6 +247,7 @@ int HalfEdges::getNext(const int ic) const {
   if(isValidCoord(iC))
       if((next = ++iC) && (_coordIndex[next] < 0))
           next = iC + _twin[iC] ;
+
   return next;
 
 }
