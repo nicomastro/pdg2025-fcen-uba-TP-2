@@ -108,7 +108,6 @@ PolygonMesh::PolygonMesh(const int nVertices, const vector<int>& coordIndex):
              // - note that all the corners in each subset share a common
             //  vertex index, but multiple subsets may correspond to the
             //  same vertex index, indicating that the vertex is singular
-             cout << coordIndex[iC] << " " << pId << endl;
             _nPartsVertex[coordIndex[iC]]++;
             visited[pId] = true;
           }
