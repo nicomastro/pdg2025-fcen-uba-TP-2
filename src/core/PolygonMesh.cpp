@@ -80,7 +80,6 @@ PolygonMesh::PolygonMesh(const int nVertices, const vector<int>& coordIndex):
           //      the two incident half edges
           e1 = getEdgeHalfEdge(iE, 0);
           e2 = getEdgeHalfEdge(iE, 1);
-          cout << e1 <<  " " << e2 << endl;
           // for the moment let's assume that the mesh does not have
           // singular edges, and that pairs of corners corresponding to the
           // same vertex across inconsistently oriented faces will be joined

@@ -156,7 +156,7 @@ HalfEdges::HalfEdges(const int nVertices, const vector<int>&  coordIndex):
     //   otherwise save the value stored in twinCorner[iE] in _twin[iC]
     //   and iC in _twin[_twin[iC]]
     if((src = getSrc(iC)) >= 0 && (dst = getDst(iC)) && (iE = getEdge(src, dst))){
-        if(twinCorner[iE] < 1)
+        if(twinCorner[iE] < 0)
             twinCorner[iE] = iC;
         else{
             _twin[iC] = twinCorner[iE];
@@ -193,8 +193,6 @@ HalfEdges::HalfEdges(const int nVertices, const vector<int>&  coordIndex):
         while(_cornerEdge[start] != -1)++start;
         _cornerEdge[start] = iC;
   }
-
-
 }
 
 
@@ -247,7 +245,6 @@ int HalfEdges::getNext(const int ic) const {
   if(isValidCoord(iC))
       if((next = ++iC) && (_coordIndex[next] < 0))
           next = iC + _twin[iC] ;
-
   return next;
 
 }
@@ -277,7 +274,7 @@ int HalfEdges::getTwin(const int iC) const {
 int HalfEdges::getNumberOfEdgeHalfEdges(const int iE) const {
     int nHe = -1;
     if(isValidEdge(iE))
-        nHe = _firstCornerEdge[iE+1] -  _firstCornerEdge[iE];
+        nHe = _firstCornerEdge[iE+1] - _firstCornerEdge[iE];
     return nHe;
 }
 
